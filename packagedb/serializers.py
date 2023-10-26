@@ -133,10 +133,10 @@ class DependentPackageSerializer(ModelSerializer):
         )
 
 
-class PackageInPackageSetAPISerializer(ModelSerializer):
+class PackageInPackageFieldAPISerializer(ModelSerializer):
     """
-    This serializes Package instances within a PackageSet that is within a
-    Package in the PackageAPISerializer
+    This serializes Package instances as links for Packages that are in a
+    Package field.
     """
     class Meta:
         model = Package
@@ -151,7 +151,7 @@ class PackageInPackageSetAPISerializer(ModelSerializer):
 
 
 class PackageSetAPISerializer(ModelSerializer):
-    packages = PackageInPackageSetAPISerializer(many=True)
+    packages = PackageInPackageFieldAPISerializer(many=True)
     class Meta:
         model = PackageSet
         fields = (
@@ -169,6 +169,7 @@ class PackageAPISerializer(HyperlinkedModelSerializer):
     package_content = SerializerMethodField()
     declared_license_expression_spdx = CharField()
     other_license_expression_spdx = CharField()
+    embedded_packages = PackageInPackageFieldAPISerializer(many=True)
 
     class Meta:
         model = Package
@@ -219,6 +220,7 @@ class PackageAPISerializer(HyperlinkedModelSerializer):
             'datasource_id',
             'file_references',
             'dependencies',
+            'embedded_packages',
             'resources',
         )
         read_only_fields = fields
@@ -227,10 +229,10 @@ class PackageAPISerializer(HyperlinkedModelSerializer):
         return obj.get_package_content_display()
 
 
-class PackageInPackageSetMetadataSerializer(ModelSerializer):
+class PackageInPackageFieldMetadataSerializer(ModelSerializer):
     """
-    This serializes Package instances within a PackageSet that is within a
-    Package in the PackageMetadataSerializer
+    This serializes Package instances as `package_uid`s for Packages that are in
+    a Package field.
     """
     class Meta:
         model = Package
@@ -243,7 +245,7 @@ class PackageInPackageSetMetadataSerializer(ModelSerializer):
 
 
 class PackageSetMetadataSerializer(ModelSerializer):
-    packages = PackageInPackageSetMetadataSerializer(many=True)
+    packages = PackageInPackageFieldMetadataSerializer(many=True)
     class Meta:
         model = PackageSet
         fields = (
@@ -266,6 +268,7 @@ class PackageMetadataSerializer(ModelSerializer):
     package_content = SerializerMethodField()
     declared_license_expression_spdx = CharField()
     other_license_expression_spdx = CharField()
+    embedded_packages = PackageInPackageFieldMetadataSerializer(many=True)
 
     class Meta:
         model = Package
@@ -306,6 +309,7 @@ class PackageMetadataSerializer(ModelSerializer):
             'source_packages',
             'extra_data',
             'dependencies',
+            'embedded_packages',
             'package_uid',
             'datasource_id',
             'purl',
@@ -317,14 +321,3 @@ class PackageMetadataSerializer(ModelSerializer):
 
     def get_package_content(self, obj):
         return obj.get_package_content_display()
-
-
-class PackageSetAPISerializer(ModelSerializer):
-    packages = PackageAPISerializer(many=True)
-
-    class Meta:
-        model = PackageSet
-        fields = [
-            'uuid',
-            'packages',
-        ]
