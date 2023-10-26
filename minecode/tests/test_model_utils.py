@@ -43,7 +43,10 @@ class ModelUtilsTestCase(MiningTestCase, JsonBasedTesting):
         self.check_expected_results(
             package.to_dict(),
             expected_loc,
-            fields_to_remove=['package_sets'],
+            fields_to_remove=[
+                'package_sets',
+                'embedded_packages',
+            ],
             regen=False,
         )
 
@@ -61,7 +64,10 @@ class ModelUtilsTestCase(MiningTestCase, JsonBasedTesting):
         self.check_expected_results(
             package.to_dict(),
             before_merge_loc,
-            fields_to_remove=['package_sets'],
+            fields_to_remove=[
+                'package_sets',
+                'embedded_packages',
+            ],
             regen=False,
         )
         package, created, merged, map_error = merge_or_create_package(

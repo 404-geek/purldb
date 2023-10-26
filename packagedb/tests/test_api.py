@@ -646,12 +646,34 @@ class PackageApiTestCase(JsonBasedTesting, TestCase):
         response = self.client.post('/api/packages/filter_by_checksums/', data=data)
         self.assertEqual(5, response.data['count'])
         expected = self.get_test_loc('api/package-filter_by_checksums-expected.json')
-        self.check_expected_results(response.data['results'], expected, fields_to_remove=["url", "uuid", "resources", "package_sets",], regen=False)
+        self.check_expected_results(
+            response.data['results'],
+            expected,
+            fields_to_remove=[
+                "url",
+                "uuid",
+                "resources",
+                "package_sets",
+                "embedded_packages"
+            ],
+            regen=False
+        )
         data["enhance_package_data"] = True
         enhanced_response = self.client.post('/api/packages/filter_by_checksums/', data=data)
         self.assertEqual(5, len(enhanced_response.data['results']))
         expected = self.get_test_loc('api/package-filter_by_checksums-enhanced-package-data-expected.json')
-        self.check_expected_results(enhanced_response.data['results'], expected, fields_to_remove=["url", "uuid", "resources", "package_sets",], regen=False)
+        self.check_expected_results(
+            enhanced_response.data['results'],
+            expected,
+            fields_to_remove=[
+                "url",
+                "uuid",
+                "resources",
+                "package_sets",
+                "embedded_packages"
+            ],
+            regen=False
+        )
 
 
 class PackageApiReindexingTestCase(JsonBasedTesting, TestCase):
@@ -1004,15 +1026,29 @@ class PackageApiPurlFilterTestCase(JsonBasedTesting, TestCase):
             'uuid',
             'resources',
             'package_sets',
+            'embedded_packages',
         ]
 
-        self.check_expected_results(result, expected, fields_to_remove=fields_to_remove, regen=False)
+        self.check_expected_results(
+            result,
+            expected,
+            fields_to_remove=fields_to_remove,
+            regen=False
+        )
 
     def test_package_api_get_enhanced_package(self):
         response = self.client.get(reverse('api:package-get-enhanced-package-data', args=[self.package3.uuid]))
         result = response.data
         expected = self.get_test_loc('api/enhanced_package.json')
-        self.check_expected_results(result, expected, fields_to_remove=['package_sets'], regen=False)
+        self.check_expected_results(
+            result,
+            expected,
+            fields_to_remove=[
+                'package_sets',
+                'embedded_packages'
+            ],
+            regen=False
+        )
 
 
 class ResourceApiTestCase(TestCase):

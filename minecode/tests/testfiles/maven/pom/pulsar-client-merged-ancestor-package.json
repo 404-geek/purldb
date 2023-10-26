@@ -40,6 +40,7 @@
     ]
   },
   "dependencies":[],
+  "embedded_packages":[],
   "package_uid":"pkg:maven/org.apache.pulsar/pulsar-client@2.5.1?uuid=fixed-uid-done-for-testing-5642512d1758",
   "datasource_id":null,
   "purl":"pkg:maven/org.apache.pulsar/pulsar-client@2.5.1",

@@ -35,6 +35,7 @@
   "source_packages":[],
   "extra_data":{},
   "dependencies":[],
+  "embedded_packages":[],
   "package_uid":"pkg:generic/pack2@0.2?uuid=fixed-uid-done-for-testing-5642512d1758",
   "datasource_id":null,
   "purl":"pkg:generic/pack2@0.2",

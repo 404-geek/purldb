@@ -58,6 +58,7 @@
           "source_packages": [],
           "extra_data": {},
           "dependencies": [],
+          "embedded_packages": [],
           "package_uid": "pkg:npm/async@0.2.9?uuid=fixed-uid-done-for-testing-5642512d1758",
           "datasource_id": null,
           "purl": "pkg:npm/async@0.2.9",
