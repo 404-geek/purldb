@@ -530,6 +530,11 @@ class Package(
             'A mapping containing a summary and license clarity score for this Package'
         ),
     )
+    embedded_packages = models.ManyToManyField(
+        'Package',
+        related_name='embedded_in',
+        help_text=_('Packages that are contained within this Package.'),
+    )
 
     search_vector = SearchVectorField(null=True)
 
