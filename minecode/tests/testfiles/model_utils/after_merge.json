@@ -1157,6 +1157,7 @@
       "is_resolved":true
     }
   ],
+  "embedded_packages":[],
   "package_uid":"pkg:maven/org.apache.pulsar/pulsar@2.5.1?uuid=fixed-uid-done-for-testing-5642512d1758",
   "datasource_id":"maven_pom",
   "purl":"pkg:maven/org.apache.pulsar/pulsar@2.5.1",

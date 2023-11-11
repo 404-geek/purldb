@@ -5,7 +5,7 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("packagedb", "0078_alter_package_release_date"),
+        ("packagedb", "0079_alter_package_name_alter_package_namespace_and_more"),
     ]
 
     operations = [
