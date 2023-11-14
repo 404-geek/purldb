@@ -535,6 +535,12 @@ class Package(
         related_name='embedded_in',
         help_text=_('Packages that are contained within this Package.'),
     )
+    content_set = models.ForeignKey(
+        'ContentSet',
+        related_name='packages',
+        on_delete=models.CASCADE,
+        help_text=_('The set of Packages with the same content as this Package.')
+    )
 
     search_vector = SearchVectorField(null=True)
 
@@ -1050,3 +1056,67 @@ class PackageSet(models.Model):
         return self.packages.order_by(
             'package_content',
         )
+
+
+class ContentSetQuerySet(models.QuerySet):
+    def get_or_none(self, *args, **kwargs):
+        """
+        Return the object matching the given lookup parameters, or None if no match exists.
+        """
+        try:
+            return self.get(*args, **kwargs)
+        except ContentSet.DoesNotExist:
+            return
+
+    def insert(self, package):
+        """
+
+        """
+        content_set = self.get_or_none(sha1=package.sha1)
+        if content_set:
+            content_set.add_to_content_set(package)
+        else:
+            content_set = ContentSet.objects.create(
+                primary_package=package,
+                sha1=package.sha1
+            )
+        return content_set
+
+
+class ContentSet(models.Model):
+    """
+    A group of Packages that have the same content
+    """
+    primary_package = models.ForeignKey(
+        Package,
+        related_name="content_set",
+        on_delete=models.CASCADE,
+        editable=False,
+    )
+
+    sha1 = models.CharField(
+        _("SHA1"),
+        max_length=40,
+        blank=True,
+        null=True,
+        unique=True,
+        help_text=_("SHA1 checksum hex-encoded, as in sha1sum."),
+    )
+
+    objects = ContentSetQuerySet.as_manager()
+
+    class Meta:
+        unique_together = (
+            ('primary_package', 'sha1'),
+        )
+        ordering = ('id',)
+        indexes = [
+            models.Index(fields=['sha1']),
+        ]
+
+    def add_to_content_set(self, package):
+        self.packages.add(package)
+
+    def get_content_set_members(self):
+        """Return related Packages"""
+        return self.packages
